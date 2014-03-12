@@ -1,13 +1,13 @@
 package com.service.om;
 
 public class Company {
-	Long id;
+	int id;
 	String name;
-	
-	public Long getId() {
+
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -16,12 +16,12 @@ public class Company {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Company [id=" + id + ", name=" + name + "]";
 	}
-	
-	
+
+
 
 }

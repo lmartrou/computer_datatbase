@@ -11,29 +11,27 @@ import com.service.om.*;
 
 public class dao {
 
-	public List<Computeur> getListComputeur(Connection cn) {
+	public List<Computer> getListComputer(Connection cn) {
 
-		ArrayList<Computeur> listeComputeur  = new ArrayList<Computeur>();
+		ArrayList<Computer> listeComputeur  = new ArrayList<Computer>();
 		ResultSet rs = null ;
 		Statement stmt = null;
 
 		try {
 
 			stmt = cn.createStatement();
-			rs = stmt.executeQuery("SELECT computer.id,computer.name,computer.introduced,computer.discontinued,computer.company_id, company.name FROM computer INNER JOIN company WHERE ( computer.company_id = company.id)");
+			rs = stmt.executeQuery("SELECT computer.id,computer.name,computer.introduced,computer.discontinued,computer.company_id FROM computer");
 
 			while (rs.next()) {
 				
-				Company c=new Company();
-				c.setId(new Long(rs.getLong(5)));
-				c.setName(rs.getString(5));
 				
-				Computeur p =  new Computeur();
-				p.setId(new Long(rs.getLong(1)));
+				
+				Computer p =  new Computer();
+				p.setId(rs.getInt(1));
 				p.setName(rs.getString(2));
 				p.setIntroduced(rs.getDate(3));
 				p.setDiscontinued(rs.getDate(4));
-				p.setCompany(c);
+				p.setCompany(rs.getInt(5));
 
 				listeComputeur.add(p);
 			}
@@ -58,7 +56,7 @@ public class dao {
 	}
 
 
-	public void insereComputeur(Computeur computeur, Connection cn) {
+	public void insereComputer(Computer computer, Connection cn) {
 
 		ResultSet rs = null ;
 		PreparedStatement stmt = null;
@@ -68,10 +66,10 @@ public class dao {
 			stmt = cn.prepareStatement("INSERT into Computeur(name, introduced,discontinued,compagny_id) VALUES(?,?,?,?);");
 
 		
-			stmt.setString(1,computeur.getName());
-			stmt.setDate(2,(java.sql.Date) computeur.getIntroduced());
-			stmt.setDate(3,(java.sql.Date) computeur.getDiscontinued());
-			stmt.setLong(4,computeur.getCompany().getId());
+			stmt.setString(1,computer.getName());
+			stmt.setDate(2,(java.sql.Date) computer.getIntroduced());
+			stmt.setDate(3,(java.sql.Date) computer.getDiscontinued());
+			stmt.setLong(4,computer.getCompany());
 
 			stmt.executeUpdate();
 
@@ -103,7 +101,7 @@ public class dao {
 			rs = stmt.executeQuery("SELECT id, name FROM company");
 			while (rs.next()) {
 				Company c =  new Company();
-				c.setId(new Long(rs.getLong(1)));
+				c.setId(rs.getInt(1));
 				c.setName(rs.getString(2));
 				
 				listeCompany.add(c);
@@ -138,7 +136,7 @@ public class dao {
 
 			stmt = cn.prepareStatement("INSERT into Company(id, name) VALUES(?,?,?,?,?);");
 
-			stmt.setLong(1,company.getId());
+			stmt.setInt(1,company.getId());
 			stmt.setString(2,company.getName());
 			
 			stmt.executeUpdate();
